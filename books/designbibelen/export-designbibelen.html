@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Designbibelen – PDF-eksport</title>
+
+	<link rel="stylesheet" href="../../css/fordoyelsesparken.css">
+
+	<style>
+		@page {
+			size: A4 portrait;
+			margin: 0;
+		}
+
+		body {
+			display: block;
+			padding: 0;
+			background: #dce0e3;
+		}
+
+		.export-controls {
+			position: sticky;
+			top: 0;
+			z-index: 10;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 4mm;
+			padding: 4mm;
+			background: #ffffff;
+			border-bottom: 1px solid #d8d2c5;
+			font-family: "Segoe UI", Arial, sans-serif;
+		}
+
+		.export-controls button {
+			border: 0;
+			border-radius: 4px;
+			padding: 9px 16px;
+			background: var(--primary);
+			color: #ffffff;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.export-controls button:disabled {
+			cursor: wait;
+			opacity: .55;
+		}
+
+		.export-status {
+			color: #4f5b61;
+			font-size: 9pt;
+		}
+
+		#book {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8mm;
+			padding: 8mm 0;
+		}
+
+		#book .fp-page {
+			flex: 0 0 auto;
+			margin: 0;
+		}
+
+		@media print {
+			body {
+				background: transparent;
+			}
+
+			.export-controls {
+				display: none;
+			}
+
+			#book {
+				display: block;
+				padding: 0;
+			}
+
+			#book .fp-page {
+				break-after: page;
+				page-break-after: always;
+				box-shadow: none;
+			}
+
+			#book .fp-page:last-child {
+				break-after: auto;
+				page-break-after: auto;
+			}
+		}
+	</style>
+</head>
+
+<body class="theme-designbibelen">
+
+	<div class="export-controls">
+		<button id="print-button" type="button" disabled>Skriver ut …</button>
+		<span id="status" class="export-status">Laster sidene i Designbibelen.</span>
+	</div>
+
+	<div id="book"></div>
+
+	<script>
+		const pages = [
+			"cover.html",
+			"001-tittelside.html",
+			"002-kolofon.html",
+			"003-innholdsfortegnelse.html",
+			"004-introduksjon.html",
+			"005-logo.html",
+			"006-logo-varianter.html",
+			"007-bruk-av-logoen.html",
+			"008-feil-bruk-av-logoen.html",
+			"009-farge-system.html",
+			"010-farge-palett.html",
+			"011-farge-kombinasjoner.html",
+			"012-typografi.html",
+			"013-layout-system.html",
+			"014-rutenett-og-marger.html",
+			"015-sidestruktur.html",
+			"016-spalter-og-komposisjon.html",
+			"017-innholds-flyt.html",
+			"018-grafiske-elementer.html",
+			"019-linjer-og-rammer.html",
+			"020-ikoner-og-ornamenter.html",
+			"021-illustrasjonsstil.html",
+			"022-farge-lys-og-stemning.html",
+			"023-perspektiv-og-miljo.html",
+			"024-figurer-og-detaljer.html",
+			"025-praktisk-bruk.html",
+			"026-omslag-og-tittelsider.html",
+			"027-digital-bruk-og-pdf.html",
+			"028-eksterne-flater.html",
+			"029-designregler.html",
+			"030-filer-og-ressurser.html",
+			"031-kvalitetssikring.html",
+			"032-versjonshistorikk.html",
+			"033-sprak-og-navngiving.html",
+			"034-tom-side.html",
+			"back-cover.html"
+		];
+
+		const book = document.getElementById("book");
+		const status = document.getElementById("status");
+		const printButton = document.getElementById("print-button");
+
+		async function loadBook() {
+			let currentPage = "";
+
+			try {
+				for (let index = 0; index < pages.length; index++) {
+					currentPage = pages[index];
+
+					const response = await fetch(currentPage);
+
+					if (!response.ok) {
+						throw new Error("Filen ble ikke funnet.");
+					}
+
+					const html = await response.text();
+					const documentPage = new DOMParser()
+						.parseFromString(html, "text/html");
+
+					const page = documentPage.querySelector(".fp-page, .page");
+
+					if (!page) {
+						throw new Error("Filen inneholder ingen gyldig bokside.");
+					}
+
+					book.appendChild(page);
+
+					status.textContent =
+						`Laster side ${index + 1} av ${pages.length} …`;
+				}
+
+				status.textContent =
+					`${pages.length} sider er klare for PDF-eksport.`;
+
+				printButton.textContent = "Lagre som PDF";
+				printButton.disabled = false;
+
+			} catch (error) {
+				status.textContent =
+					`Eksporten stoppet ved: ${currentPage}`;
+
+				printButton.textContent = "Kontroller filnavn";
+				console.error(currentPage, error);
+			}
+		}
+
+		printButton.addEventListener("click", () => {
+			window.print();
+		});
+
+		loadBook();
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,1478 @@
+/* ============================================================================
+   FORDØYELSESPARKEN — FELLES PUBLISERINGSSTIL
+   Fil: fordoyelsesparken.css
+   Versjon: 1.0
+
+   Bruk:
+   1. Legg filen i prosjektets css-mappe.
+   2. Koble hver HTML-side til filen:
+      <link rel="stylesheet" href="../../css/fordoyelsesparken.css">
+   3. Gi <body> én temaklasse, for eksempel:
+      class="theme-bokbibelen"
+
+   Prinsipp: Én HTML-fil tilsvarer én A4-side. Innhold skal ikke flyte over på
+   neste side; lag heller en ny HTML-fil når en side blir for full.
+   ============================================================================ */
+
+/* -----------------------------------------------------------------------------
+   1. FARGER, MÅL OG FELLES VARIABLER
+   ----------------------------------------------------------------------------- */
+
+:root {
+  /* Nøytrale farger */
+  --paper: #fbf8f0;
+  --paper-white: #fffdf8;
+  --ink: #1f2933;
+  --muted: #66717c;
+  --line: #d8d2c5;
+  --line-strong: #a99f8c;
+  --gold: #b89545;
+  --gold-light: #dfc67e;
+  --canvas: #dce0e3;
+
+  /* Publikasjonenes kjernefarger */
+  --bokbibelen: #08284b; /* Marineblå */
+  --karakterbibelen: #2f6b4f; /* Skoggrønn */
+  --designbibelen: #70458a; /* Lilla */
+  --parkatlas: #147f8a; /* Turkis */
+  --universbibelen: #7d2839; /* Burgunder */
+  --faktabibelen: #d9822b; /* Varm gulloransje */
+  --digitalbibelen: #315da8; /* Koboltblå */
+
+  /* Standardtema: Bokbibelen */
+  --primary: var(--bokbibelen);
+  --primary-dark: #051b34;
+  --primary-soft: #e8eef5;
+  --primary-tint: #f2f6fa;
+
+  /* Typografi. Systemfonter gir sikker og stabil PDF-eksport. */
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: "Segoe UI", Arial, Helvetica, sans-serif;
+  --font-mono: Consolas, "Courier New", monospace;
+
+  /* A4-grid */
+  --page-width: 210mm;
+  --page-height: 297mm;
+  --margin-top: 22mm;
+  --margin-right: 22mm;
+  --margin-bottom: 20mm;
+  --margin-left: 22mm;
+  --header-height: 10mm;
+  --footer-height: 10mm;
+
+  /* Rytme og avrunding */
+  --space-1: 2mm;
+  --space-2: 4mm;
+  --space-3: 6mm;
+  --space-4: 9mm;
+  --space-5: 13mm;
+  --space-6: 18mm;
+  --radius-sm: 2mm;
+  --radius-md: 4mm;
+  --shadow-page: 0 5mm 14mm rgba(31, 41, 51, 0.16);
+}
+
+/* Velg tema ved å sette klassen på <body>. */
+body.theme-bokbibelen {
+  --primary: var(--bokbibelen);
+  --primary-dark: #051b34;
+  --primary-soft: #e8eef5;
+  --primary-tint: #f2f6fa;
+}
+body.theme-karakterbibelen {
+  --primary: var(--karakterbibelen);
+  --primary-dark: #1f4c37;
+  --primary-soft: #e8f2ec;
+  --primary-tint: #f4faf6;
+}
+body.theme-designbibelen {
+  --primary: var(--designbibelen);
+  --primary-dark: #4d2d61;
+  --primary-soft: #f0e9f4;
+  --primary-tint: #faf6fc;
+}
+body.theme-parkatlas {
+  --primary: var(--parkatlas);
+  --primary-dark: #0e5961;
+  --primary-soft: #e4f2f3;
+  --primary-tint: #f2fafb;
+}
+body.theme-universbibelen {
+  --primary: var(--universbibelen);
+  --primary-dark: #571b28;
+  --primary-soft: #f3e7e9;
+  --primary-tint: #fcf5f6;
+}
+body.theme-faktabibelen {
+  --primary: var(--faktabibelen);
+  --primary-dark: #9a4f0a;
+  --primary-soft: #f8e5d2;
+  --primary-tint: #fff7ef;
+}
+body.theme-digitalbibelen {
+  --primary: var(--digitalbibelen);
+  --primary-dark: #203f75;
+  --primary-soft: #e5ebf6;
+  --primary-tint: #f3f6fb;
+}
+
+/* -----------------------------------------------------------------------------
+   2. RESET OG DOKUMENTGRUNNLAG
+   ----------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 12mm;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 0.15em;
+}
+
+/* -----------------------------------------------------------------------------
+   3. A4-SIDE OG FAST LAYOUT
+
+   Bruk:
+   <main class="fp-page">
+     <header class="fp-page-header">...</header>
+     <section class="fp-page-content">...</section>
+     <footer class="fp-page-footer">...</footer>
+   </main>
+   ----------------------------------------------------------------------------- */
+
+.fp-page {
+  position: relative;
+  width: var(--page-width);
+  height: var(--page-height);
+  margin: 0 auto 12mm;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--shadow-page);
+  isolation: isolate;
+}
+
+.fp-page::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  opacity: 0.25;
+  background-image: radial-gradient(
+    rgba(100, 82, 47, 0.12) 0.35px,
+    transparent 0.45px
+  );
+  background-size: 3px 3px;
+  pointer-events: none;
+}
+
+.fp-page-content {
+  position: absolute;
+  top: calc(var(--margin-top) + var(--header-height));
+  right: var(--margin-right);
+  bottom: calc(var(--margin-bottom) + var(--footer-height));
+  left: var(--margin-left);
+  overflow: hidden;
+}
+
+/* Brukes på innholdsrike sider som skal beholde alle elementene på én A4-side. */
+.fp-page-content--compact h2 {
+  margin-top: 5mm;
+  margin-bottom: 2.5mm;
+}
+
+.fp-page-content--compact .fp-callout {
+  margin: 5mm 0;
+  padding-top: 3.5mm;
+  padding-bottom: 3.5mm;
+}
+
+.fp-page-content--compact .fp-grid-2 {
+  gap: 4mm 6mm;
+}
+
+.fp-page-content--compact .fp-card {
+  padding: 3.5mm 5mm;
+}
+
+.fp-page-content--compact .fp-quote {
+  margin: 5mm 0 0;
+  font-size: 13pt;
+}
+
+.fp-page-content--compact .fp-figure {
+  margin: 5mm 0;
+}
+
+.fp-page-content--compact .fp-logo-figure .fp-figure__frame {
+  height: 42mm;
+}
+
+.fp-page-content--compact .fp-logo-figure .fp-figure__frame img {
+  max-height: 34mm;
+}
+
+.fp-page-content--compact .fp-definition-list {
+  margin: 4mm 0;
+}
+
+.fp-page-content--compact .fp-definition-list div {
+  padding: 1.5mm 0;
+}
+
+.fp-page-header,
+.fp-page-footer {
+  position: absolute;
+  right: var(--margin-right);
+  left: var(--margin-left);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fp-page-header {
+  top: var(--margin-top);
+  height: var(--header-height);
+  border-bottom: 0.35mm solid var(--line);
+}
+
+.fp-page-footer {
+  bottom: var(--margin-bottom);
+  height: var(--footer-height);
+  border-top: 0.35mm solid var(--line);
+}
+
+.fp-page-footer__page-number {
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+.fp-page-header__document {
+  color: var(--primary);
+}
+
+/* En smal identitetsstripe kan brukes på kapittelstartere og omslag. */
+.fp-accent-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 13mm;
+  background: var(--primary);
+  border-right: 0.7mm solid var(--gold);
+}
+
+/* -----------------------------------------------------------------------------
+   4. FORSIDE OG TITTELSIDE
+   ----------------------------------------------------------------------------- */
+
+.fp-cover {
+  display: flex;
+  min-height: 100%;
+  padding: 25mm 24mm 20mm 31mm;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.fp-cover__logo {
+  width: 92mm;
+  margin-top: 2mm;
+}
+.fp-cover__series {
+  margin-top: 17mm;
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 15pt;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+}
+
+.fp-cover__title {
+  margin: 16mm 0 0;
+  padding: 4mm 10mm 4.5mm;
+  border: 0.55mm solid var(--primary);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 34pt;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.fp-cover__subtitle {
+  max-width: 115mm;
+  margin: 13mm 0 0;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 13pt;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.fp-cover__art {
+  position: absolute;
+  right: -9mm;
+  bottom: 27mm;
+  width: 140mm;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.fp-cover__metadata {
+  margin-top: auto;
+  color: var(--primary);
+}
+.fp-cover__rule {
+  width: 78mm;
+  height: 0.55mm;
+  margin: 0 auto 3mm;
+  background: var(--gold);
+}
+.fp-cover__version {
+  font-size: 9pt;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+.fp-cover__publisher {
+  margin-top: 8mm;
+  font-size: 9pt;
+  font-weight: 700;
+}
+.fp-cover__year {
+  margin-top: 1mm;
+  font-size: 8.5pt;
+}
+
+.fp-title-page {
+  display: flex;
+  min-height: 100%;
+  padding: 30mm 25mm;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.fp-title-page__logo {
+  width: 75mm;
+  margin-bottom: 20mm;
+}
+.fp-title-page h1 {
+  margin: 0;
+}
+.fp-title-page__subtitle {
+  max-width: 110mm;
+  margin: 8mm 0 0;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 14pt;
+  font-style: italic;
+}
+.fp-title-page__metadata {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 9pt;
+  line-height: 1.7;
+}
+
+/* -----------------------------------------------------------------------------
+   5. TYPOGRAFI OG TEKSTHIERARKI
+   ----------------------------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+blockquote,
+figure,
+table {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--primary);
+  font-family: var(--font-display);
+  line-height: 1.12;
+}
+
+.fp-kicker {
+  margin-bottom: var(--space-2);
+  color: var(--gold);
+  font-size: 8.5pt;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1,
+.fp-h1 {
+  margin-bottom: var(--space-5);
+  font-size: 27pt;
+  font-weight: 700;
+}
+h2,
+.fp-h2 {
+  margin: var(--space-5) 0 var(--space-3);
+  font-size: 18pt;
+  font-weight: 700;
+}
+h3,
+.fp-h3 {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: 13pt;
+  font-weight: 700;
+}
+h4,
+.fp-h4 {
+  margin: var(--space-3) 0 var(--space-1);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  font-weight: 800;
+}
+
+p {
+  margin-bottom: var(--space-3);
+}
+.fp-lead {
+  max-width: 138mm;
+  color: #35414c;
+  font-family: var(--font-display);
+  font-size: 14pt;
+  line-height: 1.48;
+}
+.fp-small {
+  font-size: 8.5pt;
+}
+.fp-muted {
+  color: var(--muted);
+}
+.fp-caption {
+  margin-top: var(--space-2);
+  color: var(--muted);
+  font-size: 8.5pt;
+  line-height: 1.4;
+}
+
+ul,
+ol {
+  margin-bottom: var(--space-3);
+  padding-left: 6mm;
+}
+li {
+  margin-bottom: 1.5mm;
+}
+li::marker {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+strong {
+  color: var(--primary-dark);
+}
+em {
+  font-family: var(--font-display);
+}
+code,
+pre {
+  font-family: var(--font-mono);
+}
+code {
+  padding: 0.4mm 1mm;
+  border-radius: 1mm;
+  background: #f0eee8;
+  color: var(--primary-dark);
+  font-size: 0.9em;
+}
+pre {
+  margin: var(--space-3) 0;
+  padding: 4mm;
+  overflow: hidden;
+  border-left: 1mm solid var(--primary);
+  background: #f1eee7;
+  font-size: 8.5pt;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+/* -----------------------------------------------------------------------------
+   6. KAPITTELSTARTERE OG DELING AV INNHOLD
+   ----------------------------------------------------------------------------- */
+
+.fp-chapter-page {
+  display: flex;
+  min-height: 100%;
+  padding: 42mm 28mm 30mm 35mm;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fp-chapter-page__number {
+  margin-bottom: var(--space-3);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 12pt;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fp-chapter-page h1 {
+  max-width: 135mm;
+  margin-bottom: var(--space-4);
+  font-size: 37pt;
+}
+.fp-chapter-page__intro {
+  max-width: 130mm;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 15pt;
+  line-height: 1.48;
+}
+.fp-chapter-page__ornament {
+  width: 30mm;
+  height: 1mm;
+  margin-top: var(--space-6);
+  background: var(--gold);
+}
+
+.fp-section-divider {
+  display: flex;
+  min-height: 34mm;
+  margin: 0 0 var(--space-5);
+  padding: 7mm 8mm;
+  align-items: flex-end;
+  border-left: 2mm solid var(--primary);
+  background: var(--primary-tint);
+}
+.fp-section-divider__number {
+  margin-right: 5mm;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 24pt;
+  font-weight: 700;
+  line-height: 1;
+}
+.fp-section-divider__title {
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 19pt;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+/* -----------------------------------------------------------------------------
+   7. TABELLER, LISTER OG INNHOLDSFORTEGNELSE
+   ----------------------------------------------------------------------------- */
+
+.fp-table {
+  width: 100%;
+  margin: var(--space-4) 0;
+  border-collapse: collapse;
+  font-size: 9pt;
+}
+.fp-table th,
+.fp-table td {
+  padding: 2.8mm 3mm;
+  border-bottom: 0.3mm solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.fp-table th {
+  border-top: 0.7mm solid var(--primary);
+  color: var(--primary);
+  background: var(--primary-tint);
+  font-size: 8pt;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.fp-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.45);
+}
+.fp-table--compact th,
+.fp-table--compact td {
+  padding: 1.8mm 2.2mm;
+}
+.fp-table--lined {
+  border: 0.3mm solid var(--line);
+}
+
+.fp-toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fp-toc__part {
+  margin: var(--space-5) 0 var(--space-2);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 14pt;
+  font-weight: 700;
+}
+.fp-toc__item {
+  display: grid;
+  margin: 0;
+  padding: 2.2mm 0;
+  grid-template-columns: auto 1fr auto;
+  gap: 2.5mm;
+  align-items: baseline;
+  color: var(--ink);
+}
+.fp-toc__number {
+  min-width: 12mm;
+  color: var(--gold);
+  font-size: 8.5pt;
+  font-weight: 800;
+}
+.fp-toc__leader {
+  border-bottom: 0.3mm dotted var(--line-strong);
+  transform: translateY(-1mm);
+}
+.fp-toc__page {
+  color: var(--primary);
+  font-size: 8.5pt;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.fp-toc__subitem {
+  padding-left: 12mm;
+  color: var(--muted);
+  font-size: 9pt;
+}
+
+/* -----------------------------------------------------------------------------
+   8. KALL-UT-BOKSER, SITATER OG BESLUTNINGER
+   ----------------------------------------------------------------------------- */
+
+.fp-callout {
+  position: relative;
+  margin: var(--space-4) 0;
+  padding: 5mm 5mm 4.5mm 7mm;
+  border-left: 1.5mm solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--primary-tint);
+}
+.fp-callout__label {
+  margin-bottom: 1.5mm;
+  color: var(--primary);
+  font-size: 8pt;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.fp-callout > :last-child {
+  margin-bottom: 0;
+}
+
+.fp-callout--decision {
+  border-left-color: var(--gold);
+  background: #fff9e9;
+}
+.fp-callout--decision .fp-callout__label {
+  color: #80611c;
+}
+.fp-callout--warning {
+  border-left-color: #b85c45;
+  background: #fff2ee;
+}
+.fp-callout--warning .fp-callout__label {
+  color: #91422e;
+}
+.fp-callout--success {
+  border-left-color: #4b8866;
+  background: #eff8f1;
+}
+.fp-callout--success .fp-callout__label {
+  color: #28603f;
+}
+
+.fp-quote {
+  margin: var(--space-5) 0;
+  padding: 1mm 7mm;
+  border-left: 0.7mm solid var(--gold);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 15pt;
+  font-style: italic;
+  line-height: 1.38;
+}
+.fp-quote cite {
+  display: block;
+  margin-top: 3mm;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 8pt;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* -----------------------------------------------------------------------------
+   9. FIGURER, BILDER OG LOGO-OPPSETT
+   ----------------------------------------------------------------------------- */
+
+.fp-figure {
+  margin: var(--space-4) 0;
+}
+.fp-figure__frame {
+  padding: 3mm;
+  border: 0.3mm solid var(--line);
+  background: var(--paper-white);
+}
+.fp-figure__frame img {
+  width: 100%;
+  max-height: 108mm;
+  object-fit: contain;
+}
+.fp-figure--bleed {
+  margin-right: -22mm;
+  margin-left: -22mm;
+}
+.fp-figure--bleed .fp-figure__frame {
+  border-right: 0;
+  border-left: 0;
+}
+
+.fp-logo-showcase {
+  display: grid;
+  margin: var(--space-4) 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5mm;
+}
+.fp-logo-card {
+  display: flex;
+  min-height: 58mm;
+  padding: 7mm;
+  align-items: center;
+  justify-content: center;
+  border: 0.3mm solid var(--line);
+  background: var(--paper-white);
+}
+.fp-logo-card--dark {
+  background: var(--primary);
+}
+.fp-logo-card img {
+  max-width: 100%;
+  max-height: 42mm;
+  object-fit: contain;
+}
+
+/* -----------------------------------------------------------------------------
+   10. LAYOUTVERKTØY: SPALTER, KORT OG PROSESSER
+   ----------------------------------------------------------------------------- */
+
+.fp-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6mm;
+}
+.fp-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4mm;
+}
+.fp-card {
+  padding: 5mm;
+  border: 0.3mm solid var(--line);
+  border-top: 1.2mm solid var(--primary);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 253, 248, 0.72);
+}
+.fp-card h3 {
+  margin-top: 0;
+}
+.fp-card > :last-child {
+  margin-bottom: 0;
+}
+
+.fp-definition-list {
+  margin: var(--space-4) 0;
+}
+.fp-definition-list div {
+  display: grid;
+  padding: 2.5mm 0;
+  grid-template-columns: 40mm 1fr;
+  gap: 5mm;
+  border-bottom: 0.3mm solid var(--line);
+}
+.fp-definition-list dt {
+  color: var(--primary);
+  font-weight: 800;
+}
+.fp-definition-list dd {
+  margin: 0;
+}
+
+.fp-timeline {
+  position: relative;
+  margin: var(--space-4) 0;
+  padding-left: 9mm;
+}
+.fp-timeline::before {
+  position: absolute;
+  top: 2mm;
+  bottom: 2mm;
+  left: 2mm;
+  width: 0.7mm;
+  content: "";
+  background: var(--gold);
+}
+.fp-timeline__item {
+  position: relative;
+  padding: 0 0 5mm 6mm;
+}
+.fp-timeline__item::before {
+  position: absolute;
+  top: 1.5mm;
+  left: -8.2mm;
+  width: 3.5mm;
+  height: 3.5mm;
+  border: 0.7mm solid var(--paper);
+  border-radius: 50%;
+  content: "";
+  background: var(--primary);
+}
+.fp-timeline__title {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+/* -----------------------------------------------------------------------------
+   11. PRAKTISKE HJELPEKLASSER
+   ----------------------------------------------------------------------------- */
+
+.u-text-center {
+  text-align: center !important;
+}
+.u-text-right {
+  text-align: right !important;
+}
+.u-text-primary {
+  color: var(--primary) !important;
+}
+.u-text-gold {
+  color: var(--gold) !important;
+}
+.u-no-margin {
+  margin: 0 !important;
+}
+.u-mt-0 {
+  margin-top: 0 !important;
+}
+.u-mt-3 {
+  margin-top: var(--space-3) !important;
+}
+.u-mt-5 {
+  margin-top: var(--space-5) !important;
+}
+.u-mb-0 {
+  margin-bottom: 0 !important;
+}
+.u-mb-3 {
+  margin-bottom: var(--space-3) !important;
+}
+.u-mb-5 {
+  margin-bottom: var(--space-5) !important;
+}
+.u-page-break-before {
+  break-before: page;
+  page-break-before: always;
+}
+.u-keep-together {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.u-hidden {
+  display: none !important;
+}
+
+/* -----------------------------------------------------------------------------
+   12. UTSKRIFT OG PDF
+
+   I nettleseren: Skriv ut -> Lagre som PDF -> A4 -> Skala 100 %.
+   Slå av nettleserens egne topp- og bunntekster.
+   ----------------------------------------------------------------------------- */
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    width: var(--page-width);
+    height: var(--page-height);
+  }
+  body {
+    padding: 0;
+    background: transparent;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .fp-page {
+    width: var(--page-width);
+    height: var(--page-height);
+    margin: 0;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .fp-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+  .fp-page::before {
+    opacity: 0.18;
+  }
+  .fp-cover__art {
+    opacity: 0.1;
+  }
+  a {
+    text-decoration: none;
+  }
+}
+
+/* Smal skjerm: behold A4-proporsjon, men tilpass visningen. */
+@media screen and (max-width: 235mm) {
+  body {
+    padding: 4mm;
+  }
+  .fp-page {
+    transform-origin: top center;
+  }
+}
+
+/* ==========================================================================
+   INNHOLDSFORTEGNELSE – KORRIGERT A4-OPPSETT
+   ========================================================================== */
+
+.fp-toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fp-toc__part {
+  margin: 5mm 0 1.5mm;
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 12pt;
+  font-weight: 700;
+}
+
+.fp-toc__item {
+  display: grid;
+  grid-template-columns: 12mm max-content minmax(10mm, 1fr) 8mm;
+  column-gap: 2.5mm;
+  align-items: baseline;
+  margin: 0;
+  padding: 1.5mm 0;
+  color: var(--ink);
+}
+
+.fp-toc__number {
+  min-width: 0;
+  color: var(--gold);
+  font-size: 8.5pt;
+  font-weight: 800;
+}
+
+.fp-toc__leader {
+  display: block;
+  min-width: 0;
+  border-bottom: 0.3mm dotted var(--line-strong);
+  transform: translateY(-1mm);
+}
+
+.fp-toc__page {
+  justify-self: end;
+  color: var(--primary);
+  font-size: 8.5pt;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   LOGOSIDER – KOMPAKT LOGOVISNING
+   ========================================================================== */
+
+.fp-logo-figure .fp-figure__frame {
+  display: flex;
+  height: 60mm;
+  align-items: center;
+  justify-content: center;
+}
+
+.fp-logo-figure .fp-figure__frame img {
+  width: auto;
+  max-width: 120mm;
+  max-height: 50mm;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   LOGOVARIANTER – KOMPAKT RUTENETT
+   ========================================================================== */
+
+.fp-logo-variants-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4mm;
+  margin: 6mm 0;
+}
+
+.fp-logo-variants-grid--compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3mm;
+  margin: 4mm 0;
+}
+
+.fp-logo-variants-grid--compact .fp-logo-variant {
+  min-height: 34mm;
+  padding: 2mm;
+}
+
+.fp-logo-variants-grid--compact .fp-logo-variant img {
+  height: 19mm;
+}
+
+.fp-logo-variant {
+  min-height: 39mm;
+  padding: 3mm;
+  border: 0.3mm solid var(--line);
+  background: var(--paper-white);
+}
+
+.fp-logo-variant img {
+  width: 100%;
+  height: 22mm;
+  object-fit: contain;
+}
+
+.fp-logo-variant__name {
+  margin-top: 1.5mm;
+  color: var(--primary);
+  font-size: 7.5pt;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   FARGESYSTEM – PUBLIKASJONSOVERSIKT
+   ========================================================================== */
+
+.fp-publication-spectrum {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2mm;
+  margin: 7mm 0;
+}
+
+.fp-colour-swatch {
+  display: flex;
+  min-height: 38mm;
+  padding: 3mm 2mm;
+  align-items: flex-end;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 7pt;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.fp-colour-swatch--bokbibelen {
+  background: var(--bokbibelen);
+}
+
+.fp-colour-swatch--karakterbibelen {
+  background: var(--karakterbibelen);
+}
+
+.fp-colour-swatch--designbibelen {
+  background: var(--designbibelen);
+}
+
+.fp-colour-swatch--parkatlas {
+  background: var(--parkatlas);
+}
+
+.fp-colour-swatch--universbibelen {
+  background: var(--universbibelen);
+}
+
+.fp-colour-swatch--faktabibelen {
+  background: var(--faktabibelen);
+}
+
+.fp-colour-swatch--digitalbibelen {
+  background: var(--digitalbibelen);
+}
+
+/* ==========================================================================
+   FARGESYSTEM – FARGEPRØVER
+   ========================================================================== */
+
+.fp-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4mm;
+  margin: 6mm 0;
+}
+
+.fp-palette-item {
+  display: grid;
+  min-height: 24mm;
+  grid-template-columns: 22mm 1fr;
+  overflow: hidden;
+  border: 0.3mm solid var(--line);
+  background: var(--paper-white);
+}
+
+.fp-palette-item__swatch {
+  min-height: 100%;
+}
+
+.fp-palette-item__details {
+  padding: 3mm;
+}
+
+.fp-palette-item__name {
+  margin: 0 0 1mm;
+  color: var(--primary);
+  font-size: 8.5pt;
+  font-weight: 800;
+}
+
+.fp-palette-item__code {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 8pt;
+}
+
+/* ==========================================================================
+   FARGESYSTEM – GODKJENTE FARGEKOMBINASJONER
+   ========================================================================== */
+
+.fp-combination-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5mm;
+  margin: 6mm 0;
+}
+
+.fp-combination-card {
+  overflow: hidden;
+  border: 0.3mm solid var(--line);
+  background: var(--paper-white);
+}
+
+.fp-combination-card__sample {
+  display: flex;
+  min-height: 21mm;
+  align-items: center;
+  justify-content: center;
+  background: var(--sample-background);
+  color: var(--sample-text);
+  font-family: var(--font-display);
+  font-size: 15pt;
+  font-weight: 700;
+}
+
+.fp-combination-card__content {
+  padding: 3.5mm;
+}
+
+.fp-combination-card__title {
+  margin: 0 0 1.5mm;
+  color: var(--primary);
+  font-size: 9pt;
+  font-weight: 800;
+}
+
+.fp-combination-card__text {
+  margin: 0;
+  color: var(--ink);
+  font-size: 8.5pt;
+  line-height: 1.45;
+}
+
+/* ==========================================================================
+   TYPOGRAFI – SKRIFTPRØVER
+   ========================================================================== */
+
+.fp-type-sample {
+  margin: 3mm 0 4mm;
+  color: var(--primary);
+  line-height: 1.1;
+}
+
+.fp-type-sample--display {
+  font-family: var(--font-display);
+  font-size: 23pt;
+  font-weight: 700;
+}
+
+.fp-type-sample--body {
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 10.5pt;
+  line-height: 1.5;
+}
+
+.fp-type-sample--mono {
+  color: var(--primary-dark);
+  font-family: var(--font-mono);
+  font-size: 9pt;
+}
+
+/* ==========================================================================
+   TYPOGRAFI – TILPASNING FOR TREKOLONNE-VISNING
+   ========================================================================== */
+
+.fp-grid-3 .fp-type-sample {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.fp-grid-3 .fp-type-sample--display {
+  font-size: 16pt;
+  word-break: break-word;
+}
+
+/* KOMPAKT INNHOLDSFORTEGNELSE */
+.fp-toc-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7mm;
+}
+
+.fp-toc--compact .fp-toc__part {
+  margin: 0 0 1.5mm;
+  font-size: 10.5pt;
+}
+
+.fp-toc--compact .fp-toc__part:not(:first-child) {
+  margin-top: 4mm;
+}
+
+.fp-toc--compact .fp-toc__item {
+  grid-template-columns: 8mm minmax(0, max-content) minmax(4mm, 1fr) 6mm;
+  gap: 1.5mm;
+  padding: 0.8mm 0;
+  font-size: 8pt;
+}
+
+.fp-toc--compact .fp-toc__number,
+.fp-toc--compact .fp-toc__page {
+  font-size: 8pt;
+}
+
+.fp-toc--compact .fp-toc__leader {
+  transform: translateY(-0.7mm);
+}
+
+/* DESIGNBIBELEN – REDAKSJONELL FORSIDE */
+
+.fp-cover-page .fp-accent-bar {
+  width: 18mm;
+}
+
+.fp-cover-editorial {
+  display: flex;
+  min-height: 100%;
+  padding: 28mm 24mm 20mm 33mm;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.fp-cover-editorial__logo {
+  width: 92mm;
+  height: auto;
+}
+
+.fp-cover-editorial__eyebrow {
+  margin: 22mm 0 0;
+  color: var(--gold);
+  font-size: 8.5pt;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.fp-cover-editorial__title-panel {
+  width: 100%;
+  margin-top: 5mm;
+  padding: 9mm 9mm 10mm;
+  border: 0.45mm solid var(--primary);
+  border-left: 2mm solid var(--primary);
+  background: rgba(255, 253, 248, 0.72);
+}
+
+.fp-cover-editorial__title-panel h1 {
+  margin: 0;
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 35pt;
+  line-height: 1;
+}
+
+.fp-cover-editorial__title-panel p {
+  margin: 5mm 0 0;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 13pt;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.fp-cover-editorial__metadata {
+  display: grid;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 6mm;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5mm;
+  border-top: 0.6mm solid var(--gold);
+}
+
+.fp-cover-editorial__metadata span,
+.fp-cover-editorial__metadata strong {
+  display: block;
+}
+
+.fp-cover-editorial__metadata span {
+  color: var(--muted);
+  font-size: 7.5pt;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fp-cover-editorial__metadata strong {
+  margin-top: 1mm;
+  color: var(--primary);
+  font-size: 9pt;
+}
+
+/* ==========================================================
+   FELLES BAKSIDE FOR PUBLIKASJONSSERIEN
+========================================================== */
+
+.fp-back-cover {
+  position: relative;
+  overflow: hidden;
+}
+
+.fp-back-cover .fp-accent-bar {
+  right: 0;
+  left: auto;
+}
+
+.fp-back-cover__content {
+  display: flex;
+  min-height: 100%;
+  padding: 28mm 24mm 20mm 33mm;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.fp-back-cover__mark {
+  color: var(--gold);
+  font-size: 8.5pt;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.fp-back-cover__title {
+  margin: 8mm 0 0;
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 34pt;
+  line-height: 1;
+}
+
+.fp-back-cover__rule {
+  width: 100%;
+  height: 0.6mm;
+  margin: 7mm 0 8mm;
+  background: var(--gold);
+}
+
+.fp-back-cover__description {
+  max-width: 112mm;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 15pt;
+  line-height: 1.55;
+}
+
+.fp-back-cover__series {
+  margin-top: 13mm;
+  color: var(--muted);
+  font-size: 9.5pt;
+  line-height: 1.6;
+}
+
+.fp-back-cover__bottom {
+  width: 100%;
+  margin-top: auto;
+  padding-top: 8mm;
+  border-top: 0.6mm solid var(--gold);
+}
+
+.fp-back-cover__logo {
+  display: block;
+  width: 72mm;
+  height: auto;
+  margin: 0 auto 7mm;
+}
+
+.fp-back-cover__metadata {
+  color: var(--muted);
+  font-size: 8pt;
+  letter-spacing: 0.04em;
+  text-align: center;
+}

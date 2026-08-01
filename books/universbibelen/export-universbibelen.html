@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Universbibelen – PDF-eksport</title>
+
+	<link rel="stylesheet" href="../../css/fordoyelsesparken.css">
+
+	<style>
+		body {
+			margin: 0;
+			background: #dce0e3;
+		}
+
+		.export-controls {
+			position: sticky;
+			top: 0;
+			z-index: 10;
+
+			display: flex;
+			align-items: center;
+			gap: 4mm;
+
+			padding: 5mm 7mm;
+			background: #ffffff;
+			border-bottom: 1px solid #d8d2c5;
+
+			font-family: "Segoe UI", Arial, sans-serif;
+		}
+
+		.export-controls button {
+			padding: 2.7mm 4mm;
+			border: 0;
+			background: var(--primary);
+			color: #ffffff;
+
+			font: inherit;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.export-controls button:disabled {
+			opacity: 0.7;
+			cursor: wait;
+		}
+
+		.export-controls p {
+			margin: 0;
+			color: #66717c;
+		}
+
+		#book {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8mm;
+			padding: 8mm;
+		}
+
+		@media print {
+			.export-controls {
+				display: none !important;
+			}
+
+			body {
+				display: block !important;
+				margin: 0 !important;
+				padding: 0 !important;
+				background: transparent !important;
+			}
+
+			#book {
+				display: block !important;
+				width: auto !important;
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+
+			#book>.fp-page {
+				margin: 0 !important;
+				box-shadow: none !important;
+
+				break-after: page;
+				page-break-after: always;
+			}
+
+			#book>.fp-page:last-child {
+				break-after: auto;
+				page-break-after: auto;
+			}
+		}
+	</style>
+</head>
+
+<body class="theme-universbibelen">
+
+	<div class="export-controls">
+		<button id="print-button" type="button" disabled>
+			Skriver ut …
+		</button>
+
+		<p id="export-status">
+			Laster Universbibelen …
+		</p>
+	</div>
+
+	<div id="book"></div>
+
+	<script>
+		const pages = [
+			"cover.html",
+			"001-tittelside.html",
+			"002-kolofon.html",
+			"003-innholdsfortegnelse.html",
+			"004-introduksjon.html",
+			"005-hva-masterbibelen-styrer.html",
+			"006-grunnideen.html",
+			"007-universets-fem-grunnregler.html",
+			"008-parkens-identitet.html",
+			"009-leserens-plass-i-verdenen.html",
+			"010-sprak-og-navnestandard.html",
+			"011-biologi-og-fantasi.html",
+			"012-parkens-geografi.html",
+			"013-karakterer-og-roller.html",
+			"014-hovedpublikasjonene.html",
+			"015-hva-som-er-last.html",
+			"016-hva-som-kan-utvikles.html",
+			"017-beslutningssystem.html",
+			"018-nye-ideer-og-kanon.html",
+			"019-kvalitetskompass.html",
+			"020-dokumenthierarki.html",
+			"021-ressursregister.html",
+			"022-versjonshistorikk.html",
+			"back-cover.html"
+		];
+
+		const book = document.getElementById("book");
+		const printButton = document.getElementById("print-button");
+		const status = document.getElementById("export-status");
+
+		async function loadBook() {
+			try {
+				for (const fileName of pages) {
+					const response = await fetch(fileName, {
+						cache: "no-store"
+					});
+
+					if (!response.ok) {
+						throw new Error(fileName);
+					}
+
+					const source = await response.text();
+
+					const parsed = new DOMParser().parseFromString(
+						source,
+						"text/html"
+					);
+
+					const page = parsed.querySelector(".fp-page");
+
+					if (!page) {
+						throw new Error(fileName);
+					}
+
+					book.appendChild(
+						document.importNode(page, true)
+					);
+				}
+
+				printButton.disabled = false;
+				printButton.textContent = "Skriv ut som PDF";
+				status.textContent = `Klar: ${pages.length} sider lastet.`;
+
+			} catch (error) {
+				printButton.disabled = true;
+				printButton.textContent = "Kunne ikke laste";
+
+				status.textContent =
+					"Kunne ikke laste boken. Kontroller filnavnet som mangler, og åpne filen med Live Server.";
+
+				console.error(error);
+			}
+		}
+
+		printButton.addEventListener("click", () => {
+			window.print();
+		});
+
+		loadBook();
+	</script>
+
+</body>
+
+</html>

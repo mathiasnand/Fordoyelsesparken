@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Digitalbibelen – PDF-eksport</title>
+	<link rel="stylesheet" href="../../css/fordoyelsesparken.css">
+	<style>
+		@page { size: A4 portrait; margin: 0; }
+		body { display: block; padding: 0; background: #dce0e3; }
+		.export-controls { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: center; gap: 4mm; padding: 4mm; background: #ffffff; border-bottom: 1px solid #d8d2c5; font-family: "Segoe UI", Arial, sans-serif; }
+		.export-controls button { border: 0; border-radius: 4px; padding: 9px 16px; background: var(--primary); color: #ffffff; font-weight: 700; cursor: pointer; }
+		.export-controls button:disabled { cursor: wait; opacity: .55; }
+		.export-status { color: #4f5b61; font-size: 9pt; }
+		#book { display: flex; flex-direction: column; align-items: center; gap: 8mm; padding: 8mm 0; }
+		#book .fp-page { flex: 0 0 auto; margin: 0; }
+		@media print {
+			body { background: transparent; }
+			.export-controls { display: none; }
+			#book { display: block; padding: 0; }
+			#book .fp-page { break-after: page; page-break-after: always; box-shadow: none; }
+			#book .fp-page:last-child { break-after: auto; page-break-after: auto; }
+		}
+	</style>
+</head>
+
+<body class="theme-digitalbibelen">
+	<div class="export-controls">
+		<button id="print-button" type="button" disabled>Skriver ut …</button>
+		<span id="status" class="export-status">Laster sidene i Digitalbibelen.</span>
+	</div>
+	<div id="book"></div>
+
+	<script>
+		const pages = [
+			"cover.html",
+			"001-tittelside.html",
+			"002-kolofon.html",
+			"003-innholdsfortegnelse.html",
+			"004-introduksjon.html",
+			"005-formal-og-rolle.html",
+			"006-den-digitale-gjesterollen.html",
+			"007-malgrupper-og-bruk.html",
+			"008-opplevelsesloftet.html",
+			"009-utforske-leke-oppdage-og-forsta.html",
+			"010-flater-og-digitale-produkter.html",
+			"011-parkstruktur-og-navigasjon.html",
+			"012-basse-som-interaktiv-guide.html",
+			"013-fortelling-oppgaver-og-progresjon.html",
+			"014-biologi-fantasi-og-faglig-kvalitet.html",
+			"015-visuell-utforming-lyd-og-bevegelse.html",
+			"016-tilgjengelighet-og-inkluderende-bruk.html",
+			"017-trygghet-personvern-og-skjermbruk.html",
+			"018-forholdet-til-styringsdokumentene.html",
+			"019-kanon-og-digitale-virkemidler.html",
+			"020-fra-ide-til-prototype.html",
+			"021-veikart-og-prioriteringer.html",
+			"022-beslutnings-og-versjonshistorikk.html",
+			"back-cover.html"
+		];
+
+		const book = document.getElementById("book");
+		const status = document.getElementById("status");
+		const printButton = document.getElementById("print-button");
+
+		async function loadBook() {
+			let currentPage = "";
+			try {
+				for (let index = 0; index < pages.length; index++) {
+					currentPage = pages[index];
+					const response = await fetch(currentPage);
+					if (!response.ok) throw new Error("Filen ble ikke funnet.");
+					const html = await response.text();
+					const documentPage = new DOMParser().parseFromString(html, "text/html");
+					const page = documentPage.querySelector(".fp-page, .page");
+					if (!page) throw new Error("Filen inneholder ingen gyldig bokside.");
+					book.appendChild(page);
+					status.textContent = `Laster side ${index + 1} av ${pages.length} …`;
+				}
+				status.textContent = `${pages.length} sider er klare for PDF-eksport.`;
+				printButton.textContent = "Lagre som PDF";
+				printButton.disabled = false;
+			} catch (error) {
+				status.textContent = `Eksporten stoppet ved: ${currentPage}`;
+				printButton.textContent = "Kontroller filnavn";
+				console.error(currentPage, error);
+			}
+		}
+
+		printButton.addEventListener("click", () => window.print());
+		loadBook();
+	</script>
+</body>
+</html>

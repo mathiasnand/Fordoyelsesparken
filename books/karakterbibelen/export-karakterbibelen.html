@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Karakterbibelen – PDF-eksport</title>
+
+	<link rel="stylesheet" href="../../css/fordoyelsesparken.css">
+
+	<style>
+		@page {
+			size: A4 portrait;
+			margin: 0;
+		}
+
+		body {
+			display: block;
+			padding: 0;
+			background: #dce0e3;
+		}
+
+		.export-controls {
+			position: sticky;
+			top: 0;
+			z-index: 10;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 4mm;
+			padding: 4mm;
+			background: #ffffff;
+			border-bottom: 1px solid #d8d2c5;
+			font-family: "Segoe UI", Arial, sans-serif;
+		}
+
+		.export-controls button {
+			border: 0;
+			border-radius: 4px;
+			padding: 9px 16px;
+			background: var(--primary);
+			color: #ffffff;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.export-controls button:disabled {
+			cursor: wait;
+			opacity: .55;
+		}
+
+		.export-status {
+			color: #4f5b61;
+			font-size: 9pt;
+		}
+
+		#book {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8mm;
+			padding: 8mm 0;
+		}
+
+		#book .fp-page {
+			flex: 0 0 auto;
+			margin: 0;
+		}
+
+		@media print {
+			body {
+				background: transparent;
+			}
+
+			.export-controls {
+				display: none;
+			}
+
+			#book {
+				display: block;
+				padding: 0;
+			}
+
+			#book .fp-page {
+				break-after: page;
+				page-break-after: always;
+				box-shadow: none;
+			}
+
+			#book .fp-page:last-child {
+				break-after: auto;
+				page-break-after: auto;
+			}
+		}
+	</style>
+</head>
+
+<body class="theme-karakterbibelen">
+
+	<div class="export-controls">
+		<button id="print-button" type="button" disabled>Skriver ut …</button>
+		<span id="status" class="export-status">Laster sidene i Karakterbibelen.</span>
+	</div>
+
+	<div id="book"></div>
+
+	<script>
+		const pages = [
+			"cover.html",
+			"001-tittelside.html",
+			"002-kolofon.html",
+			"003-innholdsfortegnelse.html",
+			"004-introduksjon.html",
+			"005-karakter-prinsipper.html",
+			"006-roller-i-parken.html",
+			"007-basse-bakterie.html",
+			"008-basse-utseende.html",
+			"009-basse-stemme.html",
+			"010-magen.html",
+			"011-tungen.html",
+			"012-tennene.html",
+			"013-magesyren.html",
+			"014-enzymene.html",
+			"015-leveren.html",
+			"016-immunvaktene.html",
+			"017-tarmbakteriene.html",
+			"018-matgjester.html",
+			"019-storrelse-og-kroppssprak.html",
+			"020-ansiktsuttrykk.html",
+			"021-dialog-og-humor.html",
+			"022-nye-karakterer.html",
+			"023-karakterregister.html",
+			"024-versjonshistorikk.html",
+			"back-cover.html"
+		];
+
+		const book = document.getElementById("book");
+		const status = document.getElementById("status");
+		const printButton = document.getElementById("print-button");
+
+		async function loadBook() {
+			try {
+				for (let index = 0; index < pages.length; index++) {
+					const response = await fetch(pages[index]);
+
+					if (!response.ok) {
+						throw new Error(`Kunne ikke laste ${pages[index]}`);
+					}
+
+					const html = await response.text();
+					const documentPage = new DOMParser()
+						.parseFromString(html, "text/html");
+
+					const page = documentPage.querySelector("main.fp-page");
+
+					if (!page) {
+						throw new Error(`Fant ingen bokside i ${pages[index]}`);
+					}
+
+					book.appendChild(page);
+
+					status.textContent =
+						`Laster side ${index + 1} av ${pages.length} …`;
+				}
+
+				status.textContent =
+					`${pages.length} sider er klare for PDF-eksport.`;
+
+				printButton.textContent = "Lagre som PDF";
+				printButton.disabled = false;
+
+			} catch (error) {
+				status.textContent =
+					"Kunne ikke laste sidene. Åpne denne filen med Live Server.";
+				console.error(error);
+			}
+		}
+
+		printButton.addEventListener("click", () => {
+			window.print();
+		});
+
+		loadBook();
+	</script>
+
+</body>
+
+</html>
