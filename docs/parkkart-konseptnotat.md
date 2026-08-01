@@ -1,6 +1,6 @@
 # Konseptnotat: Fordøyelsesparkens parkkart
 
-Sist oppdatert: 31. juli 2026
+Sist oppdatert: 1. august 2026
 
 ## Status og avgrensning
 
@@ -161,3 +161,14 @@ Produktet kan vurderes flyttet til «Under utvikling» når:
 - ansvar, neste leveranse og nødvendige illustrasjonsressurser er navngitt
 
 Inntil dette er dokumentert, beholder produktet status «Til vurdering».
+
+## Kontrollstatus
+
+Skrivebordskontrollen 1. august 2026 fant ingen geografiske eller biologiske
+motsetninger i strukturen. Kartgrunnlaget kan videreføres til en visuelt
+utformet prototype, men status beholdes som «Til vurdering» inntil brukstest,
+endelig designkontroll, navngitt ansvar og illustrasjonsressurser er
+dokumentert. Se `docs/parkkart-skrivebordskontroll.md`.
+
+Illustrasjonsbehov, komposisjon og leveransekrav for neste prototype er
+dokumentert i `docs/parkkart-illustrasjonsbrief.md`.

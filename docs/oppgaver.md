@@ -1,14 +1,14 @@
 # Oppgaver og overleveringskø
 
-Sist oppdatert: 31. juli 2026
+Sist oppdatert: 1. august 2026
 
 Denne listen er en arbeidskø. Den endrer ikke kanon, godkjenningsstatus eller
 eierskapet som er fastsatt i publikasjonene og `AGENTS.md`.
 
 ## Neste avgrensede oppgave
 
-- [ ] Kvalitetssikre Digitalbibelen versjon 1.0 som helhet og avgjør hvilke
-  deler som kan godkjennes som styrende føringer.
+- [ ] Bygg en klikkbar nettleserprototype av parkportalen, Basses velkomst og
+  det første parkkartet med utgangspunkt i Digitalbibelens vedlegg A og B.
 
 ## Registrert videre arbeid
 
@@ -18,6 +18,12 @@ eierskapet som er fastsatt i publikasjonene og `AGENTS.md`.
 - [x] Utvikle Digitalbibelen del III, «Kvalitet og utforming».
 - [x] Utvikle Digitalbibelen del IV, «Styring og utvikling».
 - [x] Opprett Digitalbibelens kapittelsider og samlede HTML-eksport.
+- [x] Opprett Digitalbibelen vedlegg A med visuell retning, første digitale
+  gjestereise og forslag til avgrenset prototype.
+- [x] Opprett Digitalbibelen vedlegg B med skjermskisser for parkportalen,
+  Basses velkomst og det første parkkartet.
+- [ ] Kvalitetssikre Digitalbibelen versjon 1.0 som helhet og avgjør hvilke
+  deler som kan godkjennes som styrende føringer.
 - [ ] Avgjør om `docs/roadmap.md` skal oppdateres, erstattes eller arkiveres.
 - [ ] Avgjør om de tomme filene `docs/project-rules.md` og
   `docs/changelog.md` skal tas i bruk eller fjernes.

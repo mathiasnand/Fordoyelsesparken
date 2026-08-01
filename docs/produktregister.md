@@ -1,6 +1,6 @@
 # Produktregister for Fordøyelsesparken
 
-Sist oppdatert: 31. juli 2026
+Sist oppdatert: 1. august 2026
 
 ## Formål og status
 
@@ -47,11 +47,13 @@ innhold fra hovedboka, Parkatlas og eksisterende styringsdokumenter. De er
 ikke godkjent for utvikling.
 
 Konseptvurderingen for det første produktet er dokumentert i
-`docs/parkkart-konseptnotat.md`.
+`docs/parkkart-konseptnotat.md`. Den strukturelle kontrollen er dokumentert i
+`docs/parkkart-skrivebordskontroll.md`, og neste visuelle leveranse er definert
+i `docs/parkkart-illustrasjonsbrief.md`.
 
 | Arbeidstittel | Form | Opplevelsesløfte | Status | Primære eiere | Avhengigheter | Neste beslutningsport |
 | --- | --- | --- | --- | --- | --- | --- |
-| Fordøyelsesparkens parkkart | Brettbart kart eller veggkart | Finn veien gjennom parken sammen med Basse. | Til vurdering | Parkatlas og Designbibelen | Godkjent hovedkart, stedsnavn og illustrasjonsstil | Avgjør format, målgruppe og forholdet til hovedboka. |
+| Fordøyelsesparkens parkkart | Bokoppslag først; mulig brettkart eller veggkart senere | Finn veien gjennom parken sammen med Basse. | Til vurdering | Parkatlas, Faktabibelen, Bokbibelen og Designbibelen | Brukstest, valgt illustratør og visuelt kontrollert prototype | Lag visuell prototype etter illustrasjonsbriefen. |
 | Basses gjestepass | Lite hefte med parkstempler | Samle spor etter besøket gjennom parkens områder. | Til vurdering | Parkatlas, Karakterbibelen og Designbibelen | Godkjente steder, symboler og Basse-uttrykk | Definer brukssituasjon og en enkel besøksreise. |
 | Matens reise | Kortsett med rekkefølge og fakta | Legg matens virkelige reise gjennom parken i riktig rekkefølge. | Til vurdering | Faktabibelen og Parkatlas | Faglig kontrollert hovedreise og godkjent kartlogikk | Velg alder, kortantall og læringsnivå. |
 | Let og finn i Fordøyelsesparken | Stor plakat eller brettbar scene | Oppdag figurer, steder og små biologiske hendelser i parken. | Til vurdering | Parkatlas, Karakterbibelen og Designbibelen | Godkjent parkoversikt, karakterutvalg og illustrasjoner | Avgrens én scene og lag en prøveoppgave. |

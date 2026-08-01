@@ -1,14 +1,14 @@
 # Prosjektstatus for Fordøyelsesparken
 
-Sist kontrollert: 31. juli 2026
+Sist kontrollert: 1. august 2026
 
 ## Kort status
 
 Prosjektet har en etablert HTML/CSS-struktur og sju
 referansepublikasjoner. De seks opprinnelige publikasjonene har egne
 sidemapper, omslag, bakside og samlet HTML-eksport. Digitalbibelen er etablert
-som konseptutgave med omslag, bakside, 22 nummererte sider og samlet
-HTML-eksport. Del I–IV er utarbeidet.
+som konseptutgave med omslag, bakside, 28 nummererte sider og samlet
+HTML-eksport. Del I–IV samt konseptvedlegg A og B er utarbeidet.
 Dette dokumenterer eksisterende arbeidsutgaver, ikke at de er ferdig
 publisert. Fire publikasjoner oppgir versjon 1.0 som gjeldende;
 Universbibelen oppgir versjon 1.1, Designbibelen versjon 1.2 og
@@ -33,7 +33,7 @@ oppdatert i takt med innholdet som nå finnes. `docs/project-rules.md` og
 | Parkatlas | 24 nummererte sider, omslag, bakside og eksport. Styrer geografi, steder, hovedreise og drift. | Versjon 1.0 er grunnlaget; senere versjoner er ikke fastsatt. |
 | Bokbibelen | 22 nummererte sider, omslag, bakside og eksport. Styrer bokformat, historier, leseropplevelse og utgivelser. | Versjon 1.0 er grunnlaget; senere versjoner er ikke fastsatt. |
 | Faktabibelen | 22 nummererte sider, omslag, bakside og eksport. Styrer biologiske fakta, faglige prinsipper og kilder. | Versjon 1.0, datert 27. juli 2026. |
-| Digitalbibelen | 22 nummererte sider, omslag, bakside og eksport. Styrer interaktive opplevelser, brukerreiser, digitale produkter og interaksjon. | Versjon 1.0, del I–IV utarbeidet som konseptgrunnlag. |
+| Digitalbibelen | 28 nummererte sider, omslag, bakside og eksport. Styrer interaktive opplevelser, brukerreiser, digitale produkter og interaksjon. | Versjon 1.0, del I–IV samt konseptvedlegg A og B utarbeidet. |
 
 ## Låste beslutninger
 
@@ -65,8 +65,9 @@ Universbibelen. Låste beslutninger skal ikke endres lokalt i én publikasjon.
   profilark for faste ansatte og senere nye godkjente karakterer.
 - Digitalbibelen er under konseptutvikling. Publikasjonsskjelett,
   kapittelstruktur, koboltblå logo og forholdet til dokumenthierarkiet er
-  etablert. Del I–IV og samlet HTML-eksport er utarbeidet.
-  Neste behov er helhetlig kvalitetssikring og beslutning om godkjenning.
+  etablert. Del I–IV, konseptvedlegg A og B og samlet HTML-eksport er
+  utarbeidet. Vedlegg B konkretiserer parkportalen, Basses velkomst og det
+  første parkkartet. Neste behov er en klikkbar nettleserprototype.
 - Designbibelen er oppdatert til versjon 1.2 med Digitalbibelens farge og logo.
 
 ## Idébank og framtidige muligheter
@@ -129,6 +130,5 @@ Sist endret 27. juli 2026:
 
 ## Anbefalt neste steg
 
-Gjennomfør en helhetlig innholds- og eksportkontroll av Digitalbibelen
-versjon 1.0, og avgjør deretter hvilke deler som kan godkjennes som
-styrende føringer.
+Bygg en klikkbar nettleserprototype av parkportalen, Basses velkomst og det
+første parkkartet med utgangspunkt i Digitalbibelens vedlegg A og B.

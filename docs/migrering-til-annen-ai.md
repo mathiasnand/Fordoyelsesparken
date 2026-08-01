@@ -11,9 +11,9 @@ kodeassistenter. Det erstatter ikke prosjektets eierdokumenter eller
 ## Dette skal flyttes
 
 Flytt hele mappen `Fordoyelsesparken` samlet. Prosjektet består ved siste
-kontroll av 217 filer, blant annet:
+kontroll av 231 filer, blant annet:
 
-- 192 HTML-filer
+- 198 HTML-filer
 - 16 Markdown-filer
 - ett felles CSS-stilark
 - én PDF-test
@@ -60,8 +60,8 @@ referansepublikasjonene har hver sin samlede HTML-eksport:
 - `books/digitalbibelen/export-digitalbibelen.html`
 
 Digitalbibelen er etablert som konseptutgave i `books/digitalbibelen/`.
-Den har omslag, bakside, 22 nummererte sider og samlet HTML-eksport.
-Del I–IV er utarbeidet.
+Den har omslag, bakside, 28 nummererte sider og samlet HTML-eksport.
+Del I–IV og konseptvedlegg A og B er utarbeidet.
 
 Visuell kontroll må derfor gjøres ved å åpne relevante enkeltsider og
 eksportfiler i en nettleser. Endelig PDF-produksjon er ikke dokumentert som
@@ -83,7 +83,7 @@ ferdig.
 
 En ny tjeneste skal kunne:
 
-1. Se alle 217 prosjektfiler.
+1. Se alle 231 prosjektfiler.
 2. Lese norske filnavn og UTF-8-innhold korrekt.
 3. Finne de sju komplette eksportfilene ovenfor.
 4. Gjengi de låste beslutningene i `AGENTS.md` uten motstrid.
